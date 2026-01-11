@@ -1,0 +1,24 @@
+<component name="libraryTable">
+  <library name="plugins">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/plugins/EssentialsX-2.20.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/plugins/Vault.jar!/" />
+      <root url="jar://$PROJECT_DIR$/plugins/LuckPerms-Bukkit-5.4.137.jar!/" />
+      <root url="jar://$PROJECT_DIR$/plugins/PlaceholderAPI-2.11.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/plugins/worldguard-6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/plugins/ViaVersion-5.0.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/plugins/DeluxeHub-3.5.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/plugins/Vulcan-2.8.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/plugins/spark-1.10.59-bukkit.jar!/" />
+      <root url="jar://$PROJECT_DIR$/plugins/LPC.jar!/" />
+      <root url="jar://$PROJECT_DIR$/plugins/grimac-2.3.66.jar!/" />
+      <root url="jar://$PROJECT_DIR$/plugins/SkinsRestorer.jar!/" />
+      <root url="jar://$PROJECT_DIR$/plugins/Citizens-2.0.31-b3036.jar!/" />
+      <root url="jar://$PROJECT_DIR$/plugins/images-2.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/plugins/MineShell.jar!/" />
+      <root url="jar://$PROJECT_DIR$/plugins/worldedit-bukkit-6.1.9.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

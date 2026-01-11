@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="4.2.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/plugins/Citizens/lib/net/kyori/adventure-text-serializer-bungeecord/4.2.0/adventure-text-serializer-bungeecord-4.2.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/plugins/Citizens/lib/net/kyori/adventure-text-serializer-bungeecord/4.2.0/adventure-text-serializer-bungeecord-4.2.0-relocated.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

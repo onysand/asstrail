@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Expansion-luckperms">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/plugins/PlaceholderAPI/expansions/Expansion-luckperms.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
