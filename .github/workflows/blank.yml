@@ -40,34 +40,53 @@ jobs:
 
       - name: Debug - List directory contents
         run: ls -la
-      
+
       - name: Run Server and cloudflared with auto-restart and workflow recreation
         if: "!contains(github.event.head_commit.message, 'Auto commit every 30 seconds [no ci]')"
         continue-on-error: true
         env:
           FINE_GRAINED_PAT: ${{ secrets.FINE_GRAINED_PAT }}
           REPO: ${{ github.repository }}
-          CF_TUNNEL_CERT: ${{secrets.CF_CERT}}
-          CF_TUNNEL_UUID: ${{secrets.CF_TUNNEL_UUID_1}}
-          CF_TUNNEL_UUID_CONTENT: ${{secrets.CF_TUNNEL_UUID_CONTENT}}
+          CF_TUNNEL_CERT: ${{ secrets.CF_CERT }}
+          CF_TUNNEL_UUID: ${{ secrets.CF_TUNNEL_UUID }}
+          CF_TUNNEL_UUID_CONTENT: ${{ secrets.CF_TUNNEL_UUID_CONTENT }}
         run: |
           cd $GITHUB_WORKSPACE
-          mkdir ~/.cloudflared
+          mkdir -p ~/.cloudflared
           echo "${CF_TUNNEL_CERT}" > ~/.cloudflared/cert.pem
-          touch tunnel-config.yml
-          echo "${CF_TUNNEL_UUID_CONTENT}" > credentials.json
-          echo "url: tcp://localhost:25565" >> tunnel-config.yml
-          echo "tunnel: ${CF_TUNNEL_UUID}" >> tunnel-config.yml
-          echo "credentials-file: credentials.json" >> tunnel-config.yml
+
+          # Создаём правильный config.yml
+          cat > tunnel-config.yml << 'EOF'
+          tunnel: ${CF_TUNNEL_UUID}
+          credentials-file: credentials.json
+
+          ingress:
+            - service: tcp://localhost:25565
+            - service: http_status:404
+          EOF
+
+          # Для отладки покажем что получилось
+          cat tunnel-config.yml
 
           start_spigot() {
             echo "Starting Server..."
-            java -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true -Xms16G -Xmx16G -jar purpur-1.21.10.jar nogui 2>&1 | sed '/login:/s/.*/<REDACTED>/' &
+            java -Xms6G -Xmx6G \
+              -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 \
+              -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch \
+              -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M \
+              -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 \
+              -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 \
+              -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 \
+              -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 \
+              -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true \
+              -jar purpur-1.21.10.jar nogui 2>&1 | sed '/login:/s/.*/<REDACTED>/' &
             SPIGOT_PID=$!
             echo "Server started with PID $SPIGOT_PID"
           }
 
           start_cloudflared() {
+            echo "Starting Cloudflare Tunnel..."
+            # Самое важное: UUID ПОСЛЕДНИЙ аргумент!
             cloudflared tunnel --config tunnel-config.yml run ${CF_TUNNEL_UUID} &
             CLOUDFLARED_PID=$!
             echo "Cloudflare Tunnel started with PID $CLOUDFLARED_PID"
